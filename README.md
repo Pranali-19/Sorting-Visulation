@@ -23,6 +23,6 @@ A Python-based interactive visualization tool for understanding sorting algorith
 ## ▶️ How to Run
 
 ```bash
-git clone https://github.com/yourusername/sorting-visualizer.git
+git clone https://github.com/Pranali-19/Sorting-Visulation.git
 cd sorting-visualizer
 python main.py
