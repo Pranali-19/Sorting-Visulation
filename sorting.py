@@ -3,7 +3,30 @@ from tkinter import ttk
 import random
 from bubblesort import bubble_sort
 from quicksort import quick_sort
-from mergesort import merge_sort
+from mergesort import merge_sort 
+
+--------------add complexity ------------------------
+algo_complexity = {
+    "Bubble Sort": "Time: O(n²) | Space: O(1)",
+    "Merge Sort": "Time: O(n log n) | Space: O(n)",
+    "Quick Sort": "Time: O(n log n) | Space: O(log n)"
+}
+complexity_label = Label(
+    root,
+    text="Time Complexity: ",
+    font=("arial", 12, "bold"),
+    bg="#082A46",
+    fg="white"
+)
+complexity_label.place(x=300, y=100)
+def update_complexity(event=None):
+    selected = algo_menu.get()
+    complexity_label.config(text=algo_complexity.get(selected, ""))
+
+algo_menu.bind("<<ComboboxSelected>>", update_complexity)
+update_complexity()
+
+------------------------end add complexity------------------------------------
 
 root = Tk()
 root.title('Sorting Algorithm Visualiser')
