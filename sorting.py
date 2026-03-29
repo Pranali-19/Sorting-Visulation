@@ -4,35 +4,43 @@ import random
 from bubblesort import bubble_sort
 from quicksort import quick_sort
 from mergesort import merge_sort 
+import winsound  # Windows
+import time
+from tkinter import messagebox
 
---------------add complexity ------------------------
-algo_complexity = {
-    "Bubble Sort": "Time: O(n²) | Space: O(1)",
-    "Merge Sort": "Time: O(n log n) | Space: O(n)",
-    "Quick Sort": "Time: O(n log n) | Space: O(log n)"
-}
-complexity_label = Label(
-    root,
-    text="Time Complexity: ",
-    font=("arial", 12, "bold"),
-    bg="#082A46",
-    fg="white"
-)
-complexity_label.place(x=300, y=100)
-def update_complexity(event=None):
-    selected = algo_menu.get()
-    complexity_label.config(text=algo_complexity.get(selected, ""))
-
-algo_menu.bind("<<ComboboxSelected>>", update_complexity)
-update_complexity()
-
-------------------------end add complexity------------------------------------
 
 root = Tk()
 root.title('Sorting Algorithm Visualiser')
 root.geometry('900x600+200+80')
 root.config(bg='#082A46')
 data = []
+
+# --------------add complexity ------------------------
+algo_complexity = {
+    "Bubble Sort": "Time: O(n²) | Space: O(1)",
+    "Merge Sort": "Time: O(n log n) | Space: O(n)",
+    "Quick Sort": "Time: O(n log n) | Space: O(log n)"
+}
+
+result_label = Label(
+    root,
+    text="",
+    font=("arial", 14, "bold"),
+    bg="#082A46",
+    fg="yellow"
+)
+result_label.place(x=250, y=100)
+
+algo_info = {
+    "Bubble Sort": "O(n²)",
+    "Merge Sort": "O(n log n)",
+    "Quick Sort": "O(n log n)"
+}
+def update_complexity(event=None):
+    selected = algo_menu.get()
+    result_label.config(text=algo_complexity.get(selected, ""))
+
+# ------------------------end add complexity------------------------------
 
 def drawData(data,colorArray):
     canvas.delete("all")
@@ -57,19 +65,42 @@ def drawData(data,colorArray):
 
 def StartAlgorithm():
     global data
-    if not data :
+
+    if not data:
         return
+
+    selected_algo = algo_menu.get()
+
+    if selected_algo == 'Quick Sort':
+        quick_sort(data, 0, len(data) - 1, drawData, speedscale.get())
+
+    elif selected_algo == "Bubble Sort":
+        bubble_sort(data, drawData, speedscale.get())
+
+    elif selected_algo == "Merge Sort":
+        merge_sort(data, drawData, speedscale.get())
+
+    # Final green display
+    drawData(data, ['green' for _ in range(len(data))])
+
+    # 🎉 Show popup after completion
+    show_completion_popup(selected_algo)
+  
+# -------------------------------------  
+def show_completion_popup(algo_name):
+    complexity = algo_complexity.get(algo_name, "N/A")
+
+    message = f"""
+✅ Sorting Completed Successfully!
+
+Algorithm: {algo_name}
+Time Complexity: {complexity}
+"""
+
+    messagebox.showinfo("Sorting Complete", message)
     
-    if (algo_menu.get() == 'Quick Sort'):
-        quick_sort(data, 0, len(data) - 1 , drawData, speedscale.get())
-        
-    elif algo_menu.get() == "Bubble Sort":
-        bubble_sort(data, drawData,speedscale.get())
-        
-    elif algo_menu.get() == "Merge Sort":
-        merge_sort(data, drawData,speedscale.get())
-    drawData(data, ['green' for x in range(len(data))])
-    
+# ---------------------------------------------------------
+ 
 
 def Generate():
     global data
@@ -83,6 +114,7 @@ def Generate():
         data.append(random.randrange(minivalue, maxivalue + 1))
 
     drawData(data,['red' for x in range(len(data))])
+
 
 selected_algorithm = StringVar()
 mainlabel = Label(root, text="Algorithm:", font=("new roman", 16, "italic bold"), bg="#05897A",
@@ -136,5 +168,7 @@ speedscale.place(x=520, y=0)
 
 canvas = Canvas(root, width=870, height=450, bg='black')
 canvas.place(x=10, y=130)
+
+start_time = time.time()
 
 root.mainloop()
